@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: ci-cd-demo
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: ci-cd-demo
+
+  template:
+
+    metadata:
+      labels:
+        app: ci-cd-demo
+
+    spec:
+      containers:
+
+      - name: ci-cd-demo
+
+        image: hiteshsingla02/ci-cd-demo:v1
+
+        ports:
+        - containerPort: 8080
