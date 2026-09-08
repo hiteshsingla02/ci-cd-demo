@@ -1,7 +1,6 @@
 variables:
   imageRepository: ci-cd-demo
   dockerHubUser: hiteshsingla02
-  imageTag: $(Build.BuildId)
 
 trigger:
 - main
@@ -44,7 +43,7 @@ steps:
     Dockerfile: '**/Dockerfile'
     tags: |
       latest
-      $(tag)
+      $(Build.BuildId)
 
 # Push Image
 - task: Docker@2
@@ -54,11 +53,11 @@ steps:
     repository: $(dockerHubUser)/$(imageRepository)
     tags: |
       latest
-      $(tag)
+      $(Build.BuildId)
 
 # Replace the placeholder in deployment.yaml
 - script: |
-    sed -i "s/<IMAGE_TAG>/$(tag)/g" k8s/deployment.yaml
+    sed -i "s/<IMAGE_TAG>/$(Build.BuildId)/g" k8s/deployment.yaml
   displayName: Replace Image Tag
 
 # Install kubectl
@@ -78,4 +77,4 @@ steps:
       k8s/deployment.yaml
       k8s/service.yaml
     containers: |
-      hiteshsingla02/ci-cd-demo:$(tag)
+      hiteshsingla02/ci-cd-demo:$(Build.BuildId)
