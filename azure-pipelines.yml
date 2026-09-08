@@ -9,11 +9,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  imageRepository: ci-cd-demo
-  dockerHubUser: hiteshsingla02
-  tag: $(Build.BuildId)
-
 steps:
 
 # Checkout source
@@ -63,23 +58,12 @@ steps:
 
 # Replace the placeholder in deployment.yaml
 - script: |
-    sed -i "s/<IMAGE_TAG>/$(imageTag)/g" k8s/deployment.yaml
+    sed -i "s/<IMAGE_TAG>/$(tag)/g" k8s/deployment.yaml
   displayName: Replace Image Tag
-
-# Deploy to AKS
-- task: KubernetesManifest@1
-  displayName: Deploy to AKS
-  inputs:
-    action: deploy
-    kubernetesServiceConnection: AKS-ServiceConnection
-
-    manifests: |
-      k8s/deployment.yaml
-      k8s/service.yaml
 
 # Install kubectl
 - task: KubectlInstaller@0
-displayName: Install kubectl
+  displayName: Install kubectl
   inputs:
     kubectlVersion: latest
 
